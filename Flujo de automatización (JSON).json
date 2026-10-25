@@ -1,0 +1,861 @@
+{
+  "name": "AI automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1R3DvzpVN1jHRT52pTmKJzpmKH3RJfxi2rXCptggCbRs",
+          "mode": "list",
+          "cachedResultName": "Datos de Google Form",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R3DvzpVN1jHRT52pTmKJzpmKH3RJfxi2rXCptggCbRs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 553400846,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R3DvzpVN1jHRT52pTmKJzpmKH3RJfxi2rXCptggCbRs/edit#gid=553400846"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "id": "713d5fdb-4a29-4ee9-8048-17aa7599b1f3",
+      "name": "Google Sheets Trigger",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        0
+      ],
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "2z6Eh5GkizugM15j",
+          "name": "Google Sheets Trigger account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "404a200a-8c37-80c1-bb01-000b5bda752f",
+          "cachedResultName": "404a200a-8c37-80c1-bb01-000b5bda752f",
+          "cachedResultUrl": "https://app.notion.com/p/404a200a8c3780f4aa00ca85385e1782"
+        },
+        "title": "={{ ($json['Nombre'] || $json['Nombre '] || '').trim() }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Correo electronico|email",
+              "type": "email",
+              "emailValue": "={{ ($json['Correo electronico'] || '').trim() }}"
+            },
+            {
+              "key": "Estado|status",
+              "type": "status",
+              "statusValue": "Pendiente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9b52fbe8-f818-4e90-a4d6-24441a223e7f",
+      "name": "Crear registro en Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        176
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "sjkHP43PCQZAj52n",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "65cf8388-9d6c-41c3-9aa4-6137ac844148",
+                    "leftValue": "={{ ($('Google Sheets Trigger').item.json['Correo electronico'] || '').trim() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  },
+                  {
+                    "id": "c1a0e0b2-0000-4000-8000-000000000001",
+                    "leftValue": "={{ ($('Google Sheets Trigger').item.json['¿Quieres suscribirte al newsletter?'] || '').trim() }}",
+                    "rightValue": "Sí",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Solo link"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "845bb063-1719-407f-b7de-9b1dc168bbee",
+                    "leftValue": "={{ ($('Google Sheets Trigger').item.json['Correo electronico'] || '').trim() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  },
+                  {
+                    "id": "c1a0e0b2-0000-4000-8000-000000000002",
+                    "leftValue": "={{ ($('Google Sheets Trigger').item.json['¿Quieres suscribirte al newsletter?'] || '').trim() }}",
+                    "rightValue": "Sí",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Link + newsletter"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "b30eadf9-a3c6-4ab4-9178-acddaec3c220",
+                    "leftValue": "={{ ($('Google Sheets Trigger').item.json['Correo electronico'] || '').trim() }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Sin correo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "77b2d8da-1430-4f2c-a8f3-1c1f8525d062",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5.4-mini",
+          "cachedResultName": "GPT-5.4-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Datos de la persona (fila de Google Sheets):\n- Nombre: {{ ($('Google Sheets Trigger').item.json['Nombre '] || '').trim() }}\n- Apellido: {{ $('Google Sheets Trigger').item.json['Apellido'] }}\n- Tipo de usuario: {{ $('Google Sheets Trigger').item.json['Tipo de Usuario'] }}\n- Correo: {{ $('Google Sheets Trigger').item.json['Correo electronico'] }}\n- ¿Quiere newsletter?: {{ $('Google Sheets Trigger').item.json['¿Quieres suscribirte al newsletter?'] }}\n\nRedacta el asunto y el cuerpo del correo para esta persona."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "Eres el asistente de una marca de audio que regala un rack de efectos a quien completa su formulario. Analiza los datos de la persona y redacta un correo breve, cálido y personal en español.\n\nReglas:\n- Saluda por su nombre (con mayúscula inicial).\n- Agradece su contacto y adapta un comentario breve a su tipo de usuario (productor, músico, DJ, etc.).\n- Incluye siempre, en su propia línea, exactamente: \"Link: ...\" (el enlace de descarga del rack de efectos).\n- No inventes descuentos, precios ni promesas.\n- Despídete con \"Saludos\".\n- Devuelve un asunto corto y el cuerpo en texto plano.\n- Esta persona NO quiere newsletter: el correo solo entrega el link del producto. No menciones el newsletter.",
+          "maxTokens": 2000,
+          "reasoning": {
+            "reasoningOptions": {
+              "effort": "low",
+              "summary": "none"
+            }
+          },
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "email",
+              "schema": "{\"type\":\"object\",\"properties\":{\"subject\":{\"type\":\"string\"},\"body\":{\"type\":\"string\"}},\"required\":[\"subject\",\"body\"],\"additionalProperties\":false}",
+              "strict": true
+            }
+          }
+        }
+      },
+      "id": "2bdeafb6-16aa-4d58-a614-3ff30af71a0b",
+      "name": "Write Email (Solo link)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        272,
+        -128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.output[0].content[0].text.subject }}",
+        "message": "={{ $json.output[0].content[0].text.body }}",
+        "options": {
+          "sendTo": "={{ $('Google Sheets Trigger').item.json['Correo electronico'] }}"
+        }
+      },
+      "id": "12eacf96-ef88-4614-a3de-c188d7f6ded1",
+      "name": "Draft Email (No Newsletter)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        -128
+      ],
+      "webhookId": "1873a7f5-d338-43cd-a095-e62baebaaaae",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ddHEVJLa83maiHbC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Crear registro en Notion').item.json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Estado|status",
+              "type": "status",
+              "statusValue": "Esperando aprobación de humano"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bd981a54-9b92-44ea-b9fc-7a58d7070c42",
+      "name": "Notion: Esperando aprobación",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        832,
+        112
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "sjkHP43PCQZAj52n",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "santizanoff@gmail.com",
+        "subject": "=Revisar correo para {{ $('Google Sheets Trigger').item.json['Correo electronico'] }}: {{ ($('Write Email (Solo link)').isExecuted ? $('Write Email (Solo link)') : $('Write Email (Link + newsletter)')).item.json.output[0].content[0].text.subject }}",
+        "message": "=Se redactó este correo (también está guardado como borrador en Gmail).\n\nPara: {{ $('Google Sheets Trigger').item.json['Correo electronico'] }}\nAsunto: {{ ($('Write Email (Solo link)').isExecuted ? $('Write Email (Solo link)') : $('Write Email (Link + newsletter)')).item.json.output[0].content[0].text.subject }}\n\n{{ ($('Write Email (Solo link)').isExecuted ? $('Write Email (Solo link)') : $('Write Email (Link + newsletter)')).item.json.output[0].content[0].text.body }}\n\n---\nPulsa \"Enviar\" para enviarlo tal cual, o \"Descartar\" para no enviarlo (el borrador quedará en Gmail para que lo edites y lo envíes tú).",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Enviar",
+            "disapproveLabel": "Descartar"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "b1c04785-2385-43ab-bb77-ec0a05c534c7",
+      "name": "Revisar correo (aprobación manual)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        112
+      ],
+      "webhookId": "43c2d815-4564-4695-b2ed-fbdb29e7c242",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ddHEVJLa83maiHbC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "50a2a7a6-6023-46d6-8653-98b67e9eb0fc",
+      "name": "¿Aprobado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1280,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets Trigger').item.json['Correo electronico'] }}",
+        "subject": "={{ ($('Write Email (Solo link)').isExecuted ? $('Write Email (Solo link)') : $('Write Email (Link + newsletter)')).item.json.output[0].content[0].text.subject }}",
+        "emailType": "text",
+        "message": "={{ ($('Write Email (Solo link)').isExecuted ? $('Write Email (Solo link)') : $('Write Email (Link + newsletter)')).item.json.output[0].content[0].text.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "27779933-c477-4310-8998-61d16f2d9029",
+      "name": "Enviar correo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        16
+      ],
+      "webhookId": "afb9a470-11ba-4254-8df7-45f27fcbf30b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ddHEVJLa83maiHbC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "delete",
+        "messageId": "={{ ($('Draft Email (No Newsletter)').isExecuted ? $('Draft Email (No Newsletter)') : $('Draft Email (Newsletter)')).item.json.id }}"
+      },
+      "id": "c9ac4010-53ca-4c75-99ce-72baf3c52b57",
+      "name": "Borrar borrador enviado",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        16
+      ],
+      "webhookId": "85c3ce30-a819-4a0f-b3b7-50cff35accf0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ddHEVJLa83maiHbC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Crear registro en Notion').item.json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Estado|status",
+              "type": "status",
+              "statusValue": "={{ ($('Google Sheets Trigger').item.json['¿Quieres suscribirte al newsletter?'] || '').trim().toLowerCase() === 'sí' ? 'Enviado y suscripto a Newsletter' : 'Enviado' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "398e7201-b2bb-4df3-a101-ed702e99d4d2",
+      "name": "Notion: Enviado",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        16
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "sjkHP43PCQZAj52n",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "327b99f7-6978-4d0e-9522-4e4bc47d928b",
+      "name": "Descartado - queda como borrador",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Crear registro en Notion').item.json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Estado|status",
+              "type": "status",
+              "statusValue": "Descartado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3888d610-2f5f-45fb-b959-bb6d8e35358c",
+      "name": "Notion: Descartado",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1728,
+        208
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "sjkHP43PCQZAj52n",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5.4-mini",
+          "cachedResultName": "GPT-5.4-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Datos de la persona (fila de Google Sheets):\n- Nombre: {{ ($('Google Sheets Trigger').item.json['Nombre '] || '').trim() }}\n- Apellido: {{ $('Google Sheets Trigger').item.json['Apellido'] }}\n- Tipo de usuario: {{ $('Google Sheets Trigger').item.json['Tipo de Usuario'] }}\n- Correo: {{ $('Google Sheets Trigger').item.json['Correo electronico'] }}\n- ¿Quiere newsletter?: {{ $('Google Sheets Trigger').item.json['¿Quieres suscribirte al newsletter?'] }}\n\nRedacta el asunto y el cuerpo del correo para esta persona."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "Eres el asistente de una marca de audio que regala un rack de efectos a quien completa su formulario. Analiza los datos de la persona y redacta un correo breve, cálido y personal en español.\n\nReglas:\n- Saluda por su nombre (con mayúscula inicial).\n- Agradece su contacto y adapta un comentario breve a su tipo de usuario (productor, músico, DJ, etc.).\n- Incluye siempre, en su propia línea, exactamente: \"Link: ...\" (el enlace de descarga del rack de efectos).\n- No inventes descuentos, precios ni promesas.\n- Despídete con \"Saludos\".\n- Devuelve un asunto corto y el cuerpo en texto plano.\n- Esta persona SÍ quiere newsletter: después del link, termina con un párrafo final diciendo que mantendremos el contacto a través de nuestro newsletter semanal.",
+          "maxTokens": 2000,
+          "reasoning": {
+            "reasoningOptions": {
+              "effort": "low",
+              "summary": "none"
+            }
+          },
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "email",
+              "schema": "{\"type\":\"object\",\"properties\":{\"subject\":{\"type\":\"string\"},\"body\":{\"type\":\"string\"}},\"required\":[\"subject\",\"body\"],\"additionalProperties\":false}",
+              "strict": true
+            }
+          }
+        }
+      },
+      "id": "9fb10c12-042e-4871-9d34-3533241528ee",
+      "name": "Write Email (Link + newsletter)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        256
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.output[0].content[0].text.subject }}",
+        "message": "={{ $json.output[0].content[0].text.body }}",
+        "options": {
+          "sendTo": "={{ $('Google Sheets Trigger').item.json['Correo electronico'] }}"
+        }
+      },
+      "id": "07a3169a-2410-4771-ae06-6001de620351",
+      "name": "Draft Email (Newsletter)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        256
+      ],
+      "webhookId": "bf440531-eb2a-48cb-ada2-00a33318cb80",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ddHEVJLa83maiHbC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "94933291-7fde-4f58-877e-66a366c9810f",
+      "name": "Sin correo - no contactable",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Crear registro en Notion').item.json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Estado|status",
+              "type": "status",
+              "statusValue": "Descartado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "87a7f710-8d72-4842-9dda-fe4ec5cdccda",
+      "name": "Notion: Sin correo (Descartado)",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        528,
+        528
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "sjkHP43PCQZAj52n",
+          "name": "Notion account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Crear registro en Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear registro en Notion": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Write Email (Solo link)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Email (Link + newsletter)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin correo - no contactable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Email (Solo link)": {
+      "main": [
+        [
+          {
+            "node": "Draft Email (No Newsletter)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Email (No Newsletter)": {
+      "main": [
+        [
+          {
+            "node": "Notion: Esperando aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion: Esperando aprobación": {
+      "main": [
+        [
+          {
+            "node": "Revisar correo (aprobación manual)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revisar correo (aprobación manual)": {
+      "main": [
+        [
+          {
+            "node": "¿Aprobado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Aprobado?": {
+      "main": [
+        [
+          {
+            "node": "Enviar correo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descartado - queda como borrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar correo": {
+      "main": [
+        [
+          {
+            "node": "Borrar borrador enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar borrador enviado": {
+      "main": [
+        [
+          {
+            "node": "Notion: Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descartado - queda como borrador": {
+      "main": [
+        [
+          {
+            "node": "Notion: Descartado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Email (Link + newsletter)": {
+      "main": [
+        [
+          {
+            "node": "Draft Email (Newsletter)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Email (Newsletter)": {
+      "main": [
+        [
+          {
+            "node": "Notion: Esperando aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin correo - no contactable": {
+      "main": [
+        [
+          {
+            "node": "Notion: Sin correo (Descartado)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "aaa1d79c-0b4d-4f87-a817-a7aa54dcb400",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5e1a66bba4574f7ca6f6edd4e962ca32071422b2acd12789c4615b1cb59f7243"
+  },
+  "nodeGroups": [
+    {
+      "id": "01809f21-5f57-4507-8c15-a60df117f91b",
+      "name": "Registrar contacto",
+      "nodeIds": [
+        "9b52fbe8-f818-4e90-a4d6-24441a223e7f",
+        "77b2d8da-1430-4f2c-a8f3-1c1f8525d062"
+      ],
+      "description": "Cada respuesta nueva del formulario se registra en Notion como Pendiente y se decide qué correo le toca"
+    },
+    {
+      "id": "a1d0e8ef-7bd9-44bc-b59b-c498320ddbc7",
+      "name": "Correo solo link",
+      "nodeIds": [
+        "2bdeafb6-16aa-4d58-a614-3ff30af71a0b",
+        "12eacf96-ef88-4614-a3de-c188d7f6ded1"
+      ],
+      "description": "Para quien no quiere newsletter: la IA redacta un correo personal con el link y lo guarda como borrador"
+    },
+    {
+      "id": "5f79629a-839e-4a01-b38b-cf35fcac814a",
+      "name": "Correo link + newsletter",
+      "nodeIds": [
+        "9fb10c12-042e-4871-9d34-3533241528ee",
+        "07a3169a-2410-4771-ae06-6001de620351"
+      ],
+      "description": "Para quien quiere newsletter: lo añade a usuarios suscriptos y la IA redacta el correo con link y aviso del newsletter como borrador"
+    },
+    {
+      "id": "b91d5902-414c-4bc9-8ce2-49af27ab626b",
+      "name": "Revisión y envío manual",
+      "nodeIds": [
+        "bd981a54-9b92-44ea-b9fc-7a58d7070c42",
+        "b1c04785-2385-43ab-bb77-ec0a05c534c7",
+        "50a2a7a6-6023-46d6-8653-98b67e9eb0fc",
+        "27779933-c477-4310-8998-61d16f2d9029",
+        "c9ac4010-53ca-4c75-99ce-72baf3c52b57",
+        "398e7201-b2bb-4df3-a101-ed702e99d4d2",
+        "327b99f7-6978-4d0e-9522-4e4bc47d928b",
+        "3888d610-2f5f-45fb-b959-bb6d8e35358c"
+      ],
+      "description": "Notion pasa a esperando aprobación; si pulsas Enviar se envía y queda Enviado, si no, Descartado"
+    }
+  ],
+  "id": "17ifsnbgKkJRjOij",
+  "tags": []
+}
